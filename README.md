@@ -1,2 +1,2 @@
 # HypixelAPI
-A Hypixel API parsed in Kotlin.
+A Hypixel API parser in Kotlin.
