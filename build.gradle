@@ -17,3 +17,8 @@ dependencies {
     compile "com.github.jkcclemens:khttp:-SNAPSHOT"
     compile 'com.google.code.gson:gson:2.8.6'
 }
+
+wrapper {
+    gradleVersion = "5.1.1"
+    distributionType = Wrapper.DistributionType.ALL
+}
