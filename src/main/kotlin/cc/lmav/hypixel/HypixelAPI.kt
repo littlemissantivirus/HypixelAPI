@@ -4,9 +4,10 @@ import cc.lmav.hypixel.data.HypixelBoostersWrapper
 import cc.lmav.hypixel.data.HypixelGuildWrapper
 import cc.lmav.hypixel.data.HypixelPlayerResponse
 import com.google.gson.Gson
-import khttp.get
+import io.ktor.client.HttpClient
+import io.ktor.client.request.get
 
-fun main() {
+suspend fun main() {
     // This is an example of how the HypixelAPI wrapper works.
     // Replace "PUT YOUR API KEY HERE!!!" with your API key and watch.
 
@@ -27,6 +28,7 @@ fun main() {
 
     api.getGuild("zerite").takeIf { it.success }?.let {wrapper ->
         wrapper.guild.members.forEach { member ->
+
             api.getPlayerByUuid(member.uuid).takeIf { it.success }?.let {guildMember ->
                 println("${guildMember.player.displayname} has the rank: ${member.rank}")
             }
@@ -37,20 +39,21 @@ fun main() {
 class HypixelAPI(private val apiKey: String) {
 
     private val gson = Gson()
+    private val httpClient = HttpClient()
 
-    fun getPlayerByName(name: String): HypixelPlayerResponse = gson.fromJson(getRawJson("player", "&name=$name"),
+    suspend fun getPlayerByName(name: String): HypixelPlayerResponse = gson.fromJson(getRawJson("player", "&name=$name"),
             HypixelPlayerResponse::class.java)
 
-    fun getPlayerByUuid(uuid: String): HypixelPlayerResponse = gson.fromJson(getRawJson("player", "&uuid=$uuid"),
+    suspend fun getPlayerByUuid(uuid: String): HypixelPlayerResponse = gson.fromJson(getRawJson("player", "&uuid=$uuid"),
             HypixelPlayerResponse::class.java)
 
-    fun getBoosters(): HypixelBoostersWrapper = gson.fromJson(getRawJson("boosters", ""),
+    suspend fun getBoosters(): HypixelBoostersWrapper = gson.fromJson(getRawJson("boosters", ""),
             HypixelBoostersWrapper::class.java)
 
-    fun getGuild(name: String): HypixelGuildWrapper = gson.fromJson(getRawJson("guild", "&name=$name"),
+    suspend fun getGuild(name: String): HypixelGuildWrapper = gson.fromJson(getRawJson("guild", "&name=$name"),
             HypixelGuildWrapper::class.java)
 
-    private fun getRawJson(route: String, params: String) = get("https://api.hypixel.net/$route?key=$apiKey$params").text
+    private suspend fun getRawJson(route: String, params: String): String = httpClient.get("https://api.hypixel.net/$route?key=${apiKey}$params")
 
 
 }
