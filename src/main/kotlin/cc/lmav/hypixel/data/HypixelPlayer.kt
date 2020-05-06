@@ -7,7 +7,7 @@ data class HypixelPlayer(
         val achievementPoints: Int,
         val achievementRewardsNew: Map<String, Long>,
         val achievements: Map<String, Int>,
-        val achievementsOneTime: List<String>,
+        val achievementsOneTime: List<Any>,
         val achievementSync: Map<String, Int>,
         val achievementTracking: List<String>,
         val adsense_tokens: Int,
@@ -41,6 +41,7 @@ data class HypixelPlayer(
         val packageRank: Rank,
         val playername: String,
         val prefix: String,
+        val quests: Map<String, HypixelPlayerQuest>,
         val rank: String,
         val rankPlusColor: String,
         val totalDailyRewards: Int,
@@ -50,9 +51,21 @@ data class HypixelPlayer(
         val userLanguage: String,
         val uuid: String,
         val vanityTokens: Int
-)
+) {
 
-data class HypixelPlayerChallenges(val all_time: Map<String, Int>)
+}
+
+data class HypixelPlayerChallenges(
+        val all_time: Map<String, Int>,
+        val day_f: Map<String, Int>,
+        val day_g: Map<String, Int>,
+        val day_h: Map<String, Int>,
+        val day_i: Map<String, Int>,
+        val day_j: Map<String, Int>,
+        val day_k: Map<String, Int>,
+        val day_l: Map<String, Int>,
+        val day_a: Map<String, Int>
+)
 data class HypixelPlayerCompass(val compass: Map<String, Int>)
 data class HypixelPlayerEugene(val dailyTwoKExp: Long, val weekly_booster: Long)
 
@@ -75,6 +88,10 @@ data class HypixelPlayerGifting(
         val realBundlesReceived: Int,
         val realBundlesReceivedInc: Int
 )
+
+data class HypixelPlayerQuest(val completions: List<HypixelPlayerQuestCompletion>, val active: HypixelPlayerQuestActive)
+data class HypixelPlayerQuestActive(val started: Long, val objectives: Map<String, Int>)
+data class HypixelPlayerQuestCompletion(val time: Long)
 
 enum class Rank {
     VIP, VIP_PLUS, MVP, MVP_PLUS, SUPERSTAR, YOUTUBE, HELPER, MOD, ADMIN
