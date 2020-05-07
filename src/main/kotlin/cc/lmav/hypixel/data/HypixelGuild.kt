@@ -21,8 +21,8 @@ data class HypixelGuild(
         val name_lower: String,
         val preferredGames: List<String>,
         val publiclyListed: Boolean,
-        val ranks: List<HypixelGuildRank>,
-        val tag: String,
+        val ranks: List<HypixelGuildRank>?,
+        val tag: String?,
         val tagColor: String
 )
 

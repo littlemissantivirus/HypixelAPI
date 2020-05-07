@@ -1,6 +1,9 @@
 package cc.lmav.hypixel.data
 
-data class HypixelPlayerResponse(val success: Boolean, val player: HypixelPlayer)
+import com.google.gson.annotations.SerializedName
+import java.lang.Math.sqrt
+
+data class HypixelPlayerWrapper(val success: Boolean, val player: HypixelPlayer)
 
 data class HypixelPlayer(
         val _id: String,
@@ -10,7 +13,8 @@ data class HypixelPlayer(
         val achievementsOneTime: List<Any>,
         val achievementSync: Map<String, Int>,
         val achievementTracking: List<String>,
-        val adsense_tokens: Int,
+        @SerializedName("adsense_tokens")
+        val adsenseTokens: Int,
         val battlePassGlowStatus: Boolean,
         val buildTeam: Boolean,
         val challenges: HypixelPlayerChallenges,
@@ -18,7 +22,8 @@ data class HypixelPlayer(
         val chatAlerts: Boolean,
         val compassStats: HypixelPlayerCompass,
         val disguise: String,
-        val displayname: String,
+        @SerializedName("displayname")
+        val displayName: String,
         val eugene: HypixelPlayerEugene,
         val eulaCoins: Boolean,
         val fireworkStorage: List<HypixelPlayerFirework>,
@@ -33,16 +38,17 @@ data class HypixelPlayer(
         val knownAliasesLower: List<String>,
         val levelUp_MVP_PLUS: Long,
         val mcVersionRp: String,
-        val monthlyPackageRank: String,
+        val monthlyPackageRank: Rank,
         val mostRecentMinecraftVersion: Int,
         val mostRecentMonthlyPackageRank: String,
         val networkExp: Long,
         val newPackageRank: Rank,
         val packageRank: Rank,
-        val playername: String,
+        @SerializedName("playername")
+        val playerName: String,
         val prefix: String,
         val quests: Map<String, HypixelPlayerQuest>,
-        val rank: String,
+        val rank: Rank,
         val rankPlusColor: String,
         val totalDailyRewards: Int,
         val totalRewards: Int,
@@ -52,6 +58,9 @@ data class HypixelPlayer(
         val uuid: String,
         val vanityTokens: Int
 ) {
+
+    fun getPlayerRank() = rank ?: monthlyPackageRank ?: newPackageRank ?: packageRank ?: Rank.DEFAULT
+    fun playerLevel() = (sqrt(networkExp + 15312.5) - 125/sqrt(2.toDouble())) / (25 * sqrt(2.toDouble()));
 
 }
 
@@ -93,6 +102,18 @@ data class HypixelPlayerQuest(val completions: List<HypixelPlayerQuestCompletion
 data class HypixelPlayerQuestActive(val started: Long, val objectives: Map<String, Int>)
 data class HypixelPlayerQuestCompletion(val time: Long)
 
-enum class Rank {
-    VIP, VIP_PLUS, MVP, MVP_PLUS, SUPERSTAR, YOUTUBE, HELPER, MOD, ADMIN
+enum class Rank(val prefix: String, val chatColor: ChatColor) {
+    VIP("[VIP]", ChatColor.GREEN),
+    @SerializedName("VIP_PLUS")
+    VIPPLUS("[VIP+]", ChatColor.GREEN),
+    MVP("[MVP]", ChatColor.AQUA),
+    @SerializedName("MVP_PLUS")
+    MVPPLUS("[MVP+]", ChatColor.AQUA),
+    SUPERSTAR("[MVP++]", ChatColor.GOLD),
+    YOUTUBER("[YOUTUBE]", ChatColor.RED),
+    HELPER("[HELPER]", ChatColor.BLUE),
+    MOD("[MOD]", ChatColor.DARK_GREEN),
+    ADMIN("[ADMIN]", ChatColor.RED),
+
+    DEFAULT("", ChatColor.GRAY)
 }
